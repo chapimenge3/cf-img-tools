@@ -1,4 +1,52 @@
 
+async function convert() {
+  const startTime = new Date().getTime();
+  const input = document.getElementById('image');
+  console.log("file change", input.files[0])
+  const to_format = document.getElementById('to_format').selectedOptions[0].value
+
+  if (input.files.length === 0 || !to_format || to_format === 'Convert to') {
+    alert('Make sure to select a file and format')
+    return
+  }
+
+  const img = input.files[0];
+  if (img.type === `image/${to_format}`) {
+    alert('The image is already in the selected format')
+    return
+  }
+  document.getElementById("loading").style.display = "block";
+  const buff = await img.arrayBuffer();
+  const data = new Uint8Array(buff);
+  const png = convertJPEGToPNG(data, to_format)
+  const endTime = new Date().getTime();
+  const total = endTime - startTime;
+  const blob = new Blob([png], {
+    type: 'image/png'
+  })
+  const url = URL.createObjectURL(blob)
+  document.getElementById('final-out').src = url
+  document.getElementById("loading").style.display = "none";
+  document.getElementById('download-img').removeAttribute('disabled')
+
+}
+
+function downloadCurrentImage() {
+  const img = document.getElementById('final-out')
+  // check if the img is available or it is not starts with 'blob:'
+  if (!img || !img.src || img.src.startsWith('blob:')) {
+    alert('No image available')
+    return
+  }
+  const a = document.createElement
+  const url = img.src
+  const filename = 'image.png'
+  a.href = url
+  a.download = filename
+  a.click()
+}
+
+
 const fileInput = document.querySelector("#file-js-example input[type=file]");
 fileInput.onchange = () => {
   if (fileInput.files.length > 0) {
@@ -6,23 +54,6 @@ fileInput.onchange = () => {
     fileName.textContent = fileInput.files[0].name;
   }
 };
+document.getElementById("convert").addEventListener("click", convert);
 
 
-async function convert() {
-  const input = document.getElementById('img');
-  console.log("file change", input.files[0])
-  const img = input.files[0];
-  const buff = await img.arrayBuffer();
-  const data = new Uint8Array(buff);
-  console.log("data", data)
-  console.log("Before calling wasm function")
-  const png = convertJPEGToPNG(data)
-  console.log("After calling wasm function", png)
-  const blog = new Blob([png], {
-    type: 'image/png'
-  })
-  const url = URL.createObjectURL(blog)
-  const imgEl = document.createElement('img')
-  imgEl.src = url
-  document.body.appendChild(imgEl)
-}

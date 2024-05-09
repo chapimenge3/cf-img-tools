@@ -10,16 +10,15 @@
   <script src="./wasm_exec.js"></script>
   <script>
     if (WebAssembly) {
-        const go = new Go();
-        WebAssembly.instantiateStreaming(fetch('main.wasm'), go.importObject).then((result) => {
-            go.run(result.instance)
-            console.log("Wasm loaded")
-        })
+      const go = new Go();
+      WebAssembly.instantiateStreaming(fetch('main.wasm'), go.importObject).then((result) => {
+        go.run(result.instance)
+        console.log("Wasm loaded")
+      })
 
     }
 
-
-</script>
+  </script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
     integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
     crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -55,9 +54,9 @@
                     <li class="is-active"><a href="#">POC</a></li>
                     <li><a href="https://blog.chapimenge.com">Blog</a></li>
                     <li><a href="https://chapimenge.com">Site</a></li>
-                    <li><a href="https://chapimenge.com">Who</a></li>
                     <li><a href="https://webassembly.org/">WASM</a></li>
                     <li><a href="https://github.com/golang/go/wiki/WebAssembly">Go Wasm</a></li>
+                    <li><a href="https://github.com/chapimenge3/cf-img-tools">Source Code</a></li>
                   </ul>
                 </div>
               </div>
@@ -71,16 +70,16 @@
             <div class="column is-6 is-offset-1">
 
               <div class="select is-normal mb-2">
-                <select>
+                <select id="to_format">
                   <option>Convert to</option>
-                  <option>PNG</option>
-                  <option>JPEG</option>
+                  <option value="png">PNG</option>
+                  <option value="jpeg">JPEG</option>
                 </select>
               </div>
 
               <div id="file-js-example" class="file has-name">
                 <label class="file-label">
-                  <input class="file-input" type="file" name="image" accept="image/*">
+                  <input class="file-input" type="file" id="image" name="image" accept="image/*">
                   <span class="file-cta">
                     <span class="file-icon">
                       <i class="fas fa-upload"></i>
@@ -93,7 +92,7 @@
 
               <br>
               <p class="has-text-centered">
-                <a class="button is-medium is-info is-outlined">
+                <a class="button is-medium is-primary is-outlined" id="convert">
                   Convert
                 </a>
               </p>
@@ -101,9 +100,15 @@
 
 
             <div class="column is-5">
-              <figure class="image is-4by3">
-                <img src="https://dummyimage.com/600x400/000/fff?text=PLACEHOLDER IMG" alt="Description">
+              <figure class="image is-fullwidth">
+                <img id="final-out" src="https://dummyimage.com/600x400/000/fff?text=PLACEHOLDER IMG" alt="Description">
               </figure>
+              <progress id="loading" style="display: none;" class="progress is-primary" max="100">30%</progress>
+              <p class="has-text-centered">
+                <button onclick="downloadCurrentImage" class="button is-medium is-primary is-muted" id="download-img">
+                  Downlaoad
+                </button>
+              </p>
             </div>
 
           </div>
@@ -121,7 +126,7 @@
       </div>
     </section>
   </div>
-  <script type="module" src="/main.js"></script>
+  <script defer type="module" src="/main.js"></script>
 </body>
 
 </html>
