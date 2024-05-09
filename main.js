@@ -2,7 +2,6 @@
 async function convert() {
   const startTime = new Date().getTime();
   const input = document.getElementById('image');
-  console.log("file change", input.files[0])
   const to_format = document.getElementById('to_format').selectedOptions[0].value
 
   if (input.files.length === 0 || !to_format || to_format === 'Convert to') {
