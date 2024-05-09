@@ -14,7 +14,7 @@ async function convert() {
     alert('The image is already in the selected format')
     return
   }
-  document.getElementById("loading").style.display = "block";
+  document.getElementById("loading").style.visibility = "visible";
   const buff = await img.arrayBuffer();
   const data = new Uint8Array(buff);
   const png = convertJPEGToPNG(data, to_format)
@@ -25,19 +25,20 @@ async function convert() {
   })
   const url = URL.createObjectURL(blob)
   document.getElementById('final-out').src = url
-  document.getElementById("loading").style.display = "none";
+  document.getElementById("loading").style.visibility = "hidden";
   document.getElementById('download-img').removeAttribute('disabled')
 
 }
 
 function downloadCurrentImage() {
+  console.log('Downoading')
   const img = document.getElementById('final-out')
   // check if the img is available or it is not starts with 'blob:'
-  if (!img || !img.src || img.src.startsWith('blob:')) {
+  if (!img || !img.src || !img.src.startsWith('blob:')) {
     alert('No image available')
     return
   }
-  const a = document.createElement
+  const a = document.createElement('a')
   const url = img.src
   const filename = 'image.png'
   a.href = url
@@ -54,5 +55,4 @@ fileInput.onchange = () => {
   }
 };
 document.getElementById("convert").addEventListener("click", convert);
-
-
+document.getElementById("download-img").addEventListener("click", downloadCurrentImage)
